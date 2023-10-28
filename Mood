@@ -1,0 +1,78 @@
+import requests
+
+
+#We are begginer programers, so this program won't be too advanced.
+
+#Asks for mood:
+#In a finished program, this would be a dataset that would affect how the mood trend #would look like. For example, if the user would be sad during rainy days, it would #analyze that and would encourage procreative activites to the user that are #applicable for rainy days.
+def get_user_mood():
+    mood = input("How's your mood today? ")
+    return mood
+
+#Open Weather API retrieves data based on city name and api key.
+def get_weather_data(api_key, city):
+    base_url = "http://api.openweathermap.org/data/2.5/weather"
+    params = {
+        "q": city,
+        "appid": api_key,
+        "units": "metric"
+    }
+
+    response = requests.get(base_url, params=params)
+
+    #RESPONSE CODE ERROR   
+    if response.status_code != 200:
+        print(f"Error: Received status code {response.status_code} from API")
+        return None
+
+    data = response.json()
+
+  #MAIN ERROR
+    if 'main' not in data:
+        print("Error: 'main' key not found in response data")
+        return None
+
+    #defines temp and humidity data
+    temperature = data['main']['temp']
+    humidity = data['main']['humidity']
+
+    return temperature, humidity
+
+# If Program was finished, would calcualte Mood Trend.
+def calculate_mood_trend(user_mood, weather_data):
+    # Implement machine learning or trend calculation based on weather and mood input
+    # Set the calculated mood trend
+    mood_trend = "Feeling happy on sunny days, and sad on rainy days (mock data)"
+    return mood_trend
+
+def main():
+    # Replace with your OpenWeatherMap API key
+    api_key = "3bb3846f2ec234f1131ba20fbbdb8b3c"
+
+    city = input("Enter the name of your city: ")
+    user_mood = get_user_mood()
+    weather_data = get_weather_data(api_key, city)
+    mood_trend = calculate_mood_trend(user_mood, weather_data)
+
+    #Weather Data Error
+    if weather_data is None:
+        print("Failed to retrieve weather data. Please check your API key")
+        return
+
+    temperature, humidity = weather_data
+
+    #prints output
+    print(f"Temperature in {city}: {temperature} °C")
+    print(f"Humidity in {city}: {humidity}%")
+    print(f"Mood-Weather Trend: {mood_trend}")
+    print('\n')
+    print("If we had more time, this program would be able to use different datasets to") 
+    print("predict the mood trend. This would be able to help the user find out how the") 
+    print("environment impacts them, allowing them to make better choices in their lives")
+
+if __name__ == "__main__":
+    main()
+
+#If we had more time, this program would be able to use different datasets to
+#predict the mood trend. This would be able to help the user find out how the
+#environment impacts them, allowing them to make better choices in their lives
